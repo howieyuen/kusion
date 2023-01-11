@@ -11,7 +11,7 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
+#      - darwin
     goarch:
       - amd64
       - arm64
@@ -45,59 +45,114 @@ changelog:
 
 release:
   github:
-    owner: KusionStack
+    owner: howieyuen
     name: kusion
   draft: false
   header: |
     ## Docker Images
-    * `kusionstack/kusion:{{ .Env.KUSION_VERSION }}`
+    * `howieyuen/kusion:{{ .Env.KUSION_VERSION }}`
     
     ## Dependent version
-    * [kclvm-go](https://github.com/KusionStack/kclvm-go): `{{ .Env.KCLVM_GO_VERSION }}`
-    * [kcl-plugin](https://github.com/KusionStack/kcl-plugin): `{{ .Env.KCL_PLUGIN_VERSION }}`
+    * [kclvm-go](https://github.com/howieyuen/kclvm-go): `{{ .Env.KCLVM_GO_VERSION }}`
+    * [kcl-plugin](https://github.com/howieyuen/kcl-plugin): `{{ .Env.KCL_PLUGIN_VERSION }}`
 
-dockers:
-  - use: buildx
-    goos: linux
-    goarch: amd64
-    dockerfile: Dockerfile
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
-    build_flag_templates:
-      - "--target=goreleaser"
-      - "--pull"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.name={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
-      - "--platform=linux/amd64"
+chocolateys:
+  -
+    # Your app's package name.
+    # The value may not contain spaces or character that are not valid for a URL.
+    # If you want a good separator for words, use '-', not  '.'.
+    #
+    # Defaults to `ProjectName`.
+    name: kusion
 
-docker_manifests:
-  - use: docker
-    name_template: kusionstack/{{ .ProjectName }}:{{ .Tag }}
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
-  - use: docker
-    name_template:  kusionstack/{{ .ProjectName }}:latest
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
+    # IDs of the archives to use.
+    # Defaults to empty, which includes all artifacts.
+    ids:
+      - default
 
-brews:
-  - tap:
-      owner: KusionStack
-      name: homebrew-tap
-    url_template: "https://github.com/KusionStack/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    download_strategy: CurlDownloadStrategy
-    # Git author used to commit to the repository.
-    # Defaults are shown.
-    commit_author:
-      name: GoReleaser Bot
-      email: goreleaser@carlosbecker.com
-    folder: HomebrewFormula
-    homepage: "https://github.com/KusionStack/kusion"
-    description: "Codify and deliver intentions to Kubernetes and Clouds"
-    license: "Apache License"
-    skip_upload: false
-    test: |
-      system "#{bin}/kusion version"
+    # Your app's owners.
+    # It basically means your.
+    # Defaults empty.
+    owners: howieyuen
+
+    # The app's title.
+    # A human-friendly title of the package.
+    # Defaults to `ProjectName`.
+    title: Kusion CLI
+
+    # Your app's authors (probably you).
+    authors: howieyuen
+
+    # Your app's project url.
+    # It is a required field.
+    project_url: https://kusionstack.io
+
+    # Template for the url which is determined by the given Token (github,
+    # gitlab or gitea)
+    # Default depends on the client.
+    url_template: "https://github.com/howieyuen/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    # App's icon.
+    # Default is empty.
+    icon_url: https://github.com/howieyuen/kusion/blob/main/docs/logo.png
+
+    # Your app's copyright details.
+    # Default is empty.
+    copyright: 2023 Hao Yuan
+
+    # App's license information url.
+    license_url: https://github.com/howieyuen/kusion/blob/main/LICENSE
+
+    # Your apps's require license acceptance:
+    # Specify whether the client must prompt the consumer to accept the package
+    # license before installing.
+    # Default is false.
+    require_license_acceptance: false
+
+    # Your app's source url.
+    # Default is empty.
+    project_source_url: https://github.com/howieyuen/kusion
+
+    # Your app's documentation url.
+    # Default is empty.
+    docs_url: https://github.com/howieyuen/kusion/blob/main/README.md
+
+    # App's bugtracker url.
+    # Default is empty.
+    bug_tracker_url: https://github.com/howieyuen/kusion/issues
+
+    # Your app's tag list.
+    # Default is empty.
+    tags: "go devops cloud-native iac app-delivery"
+
+    # Your app's summary:
+    summary: Codify and deliver intentions to Kubernetes and Clouds.
+
+    # This the description of your chocolatey package.
+    # Supports markdown.
+    description: |
+      {{ .ProjectName }} installer package.
+      Kusion is the engine of KusionStack for parsing user's intentions described in Konfig and making them effect in infrastructures.
+
+    # Your app's release notes.
+    # A description of the changes made in this release of the package.
+    # Supports markdown. To prevent the need to continually update this field,
+    # providing a URL to an external list of Release Notes is perfectly
+    # acceptable.
+    # Default is empty.
+    release_notes: "https://github.com/howieyuen/kusion/releases/tag/v{{ .Version }}"
+
+    # The api key that should be used to push to the chocolatey repository.
+    #
+    # WARNING: do not expose your api key in the configuration file!
+    api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+
+    # The source repository that will push the package to.
+    #
+    # Defaults are shown below.
+    source_repo: "https://push.chocolatey.org/"
+
+    # Setting this will prevent goreleaser to actually try to push the package
+    # to chocolatey repository, leaving the responsability of publishing it to
+    # the user.
+    skip_publish: false

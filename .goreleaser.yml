@@ -15,7 +15,7 @@ builds:
       - darwin
     goarch:
       - amd64
-      - arm64
+#      - arm64
     # 使用 ldflags="-s -w" 去掉符号表和调试信息，以减少发布包的大小
     ldflags:
       - -s
@@ -46,49 +46,23 @@ changelog:
 
 release:
   github:
-    owner: KusionStack
+    owner: howieyuen
     name: kusion
   draft: false
   footer: |
     ## Docker Images
-    * `kusionstack/kusion:{{ .Env.KUSION_VERSION }}`
+    * `howieyuen/kusion:{{ .Env.KUSION_VERSION }}`
     
     ## Dependent version
     * [kclvm-go](https://github.com/KusionStack/kclvm-go): `{{ .Env.KCLVM_GO_VERSION }}`
     * [kcl-plugin](https://github.com/KusionStack/kcl-plugin): `{{ .Env.KCL_PLUGIN_VERSION }}`
 
-dockers:
-  - use: buildx
-    goos: linux
-    goarch: amd64
-    dockerfile: Dockerfile
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
-    build_flag_templates:
-      - "--target=goreleaser"
-      - "--pull"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.name={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-      - "--label=org.opencontainers.image.source={{.GitURL}}"
-      - "--platform=linux/amd64"
-
-docker_manifests:
-  - use: docker
-    name_template: kusionstack/{{ .ProjectName }}:{{ .Tag }}
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
-  - use: docker
-    name_template:  kusionstack/{{ .ProjectName }}:latest
-    image_templates:
-      - kusionstack/{{ .ProjectName }}:{{ .Tag }}-amd64
-
 brews:
   - tap:
-      owner: KusionStack
+      owner: howieyuen
       name: homebrew-tap
-    url_template: "https://github.com/KusionStack/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    url_template: "https://github.com/howieyuen/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     download_strategy: CurlDownloadStrategy
     # Git author used to commit to the repository.
     # Defaults are shown.
@@ -96,7 +70,7 @@ brews:
       name: GoReleaser Bot
       email: goreleaser@carlosbecker.com
     folder: HomebrewFormula
-    homepage: "https://github.com/KusionStack/kusion"
+    homepage: "https://github.com/howieyuen/kusion"
     description: "Codify and deliver intentions to Kubernetes and Clouds"
     license: "Apache License"
     skip_upload: false
@@ -106,17 +80,17 @@ brews:
       system "#{bin}/kusion version"
 
 scoop:
-  url_template: "https://github.com/KusionStack/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+  url_template: "https://github.com/howieyuen/kusion/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
   bucket:
-    owner: KusionStack
+    owner: howieyuen
     name: scoop-bucket
     branch: main
-    token: "{{ .Env.GITHUB_TOKEN }}"
+    token: "{{ .Env.TAP_GITHUB_TOKEN }}"
   folder: Scoops
   commit_author:
     name: goreleaserbot
     email: bot@goreleaser.com
   commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
-  homepage: "http://github.com/KusionStack/kusion"
+  homepage: "http://github.com/howieyuen/kusion"
   description: "Codify and deliver intentions to Kubernetes and Clouds."
   license: Apache License 2.0

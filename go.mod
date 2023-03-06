@@ -63,14 +63,16 @@ require (
 	k8s.io/client-go v0.24.2
 	k8s.io/component-base v0.24.2
 	k8s.io/kubectl v0.24.2
-	kusionstack.io/kcl-plugin v0.4.1-alpha2
-	kusionstack.io/kclvm-go v0.4.4-beta.2
+	kusionstack.io/kcl-plugin v0.4.4
+	kusionstack.io/kclvm-go v0.4.5
 	sigs.k8s.io/controller-runtime v0.12.3
 	sigs.k8s.io/kustomize/api v0.11.4
 	sigs.k8s.io/kustomize/kustomize/v4 v4.5.4
 	sigs.k8s.io/kustomize/kyaml v0.13.6
 	sigs.k8s.io/yaml v1.3.0
 )
+
+replace kusionstack.io/kclvm-go => github.com/kcl-lang/kclvm-go v0.0.0-20230303103152-81ba31fb312e
 
 require (
 	cloud.google.com/go v0.102.1 // indirect
@@ -234,7 +236,6 @@ require (
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
-	kusionstack.io/kclvm-artifact-go v0.4.4-beta.2 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 	sourcegraph.com/sourcegraph/appdash v0.0.0-20190731080439-ebfcffb1b5c0 // indirect
